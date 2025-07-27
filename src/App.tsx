@@ -1,18 +1,11 @@
-import { Container, Box, Typography, CssBaseline } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import TaskManager from "./features/TaskManager";
 
 function App() {
   return (
     <>
       <CssBaseline />
-      <Container maxWidth="xl">
-        <Box py={4}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Task Manager
-          </Typography>
-          <Box mb={2}>{/* <TaskFilter /> */}</Box>
-          <Box>{/* <TaskList /> */}</Box>
-        </Box>
-      </Container>
+      <TaskManager />
     </>
   );
 }
