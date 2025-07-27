@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "title": "Finish project",
+    "description": "Complete the task manager app",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2025-08-01"
+  },
+  {
+    "id": "2",
+    "title": "Review PRs",
+    "description": "Check pull requests in GitHub",
+    "status": "pending",
+    "priority": "medium",
+    "dueDate": "2025-08-03"
+  }
+]
