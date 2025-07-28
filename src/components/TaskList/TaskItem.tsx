@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,43 +10,41 @@ import {
 } from "@mui/material";
 import type { Task, TaskItemProps, TaskStatus } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onStatusChange,
   onDelete,
 }) => {
-
   const theme = useTheme();
 
+  const getStatusColor = (status: TaskStatus) => {
+    switch (status) {
+      case "pending":
+        return theme.palette.warning.main;
+      case "in-progress":
+        return theme.palette.info.main;
+      case "completed":
+        return theme.palette.success.main;
+      default:
+        return theme.palette.grey[300];
+    }
+  };
 
- const getStatusColor = (status: TaskStatus) => {
-  switch (status) {
-    case 'pending':
-      return theme.palette.warning.main;
-    case 'in-progress':
-      return theme.palette.info.main;
-    case 'completed':
-      return theme.palette.success.main;
-    default:
-      return theme.palette.grey[300];
-  }
-};
+  const getPriorityColor = (priority: Task["priority"]) => {
+    switch (priority) {
+      case "low":
+        return theme.palette.grey[theme.palette.mode === "light" ? 600 : 400];
+      case "medium":
+        return theme.palette.text.primary;
+      case "high":
+        return theme.palette.error.main;
+      default:
+        return theme.palette.text.secondary;
+    }
+  };
 
-const getPriorityColor = (priority: Task['priority']) => {
-  switch (priority) {
-    case 'low':
-      return theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400];
-    case 'medium':
-      return theme.palette.text.primary;
-    case 'high':
-      return theme.palette.error.main;
-    default:
-      return theme.palette.text.secondary;
-  }
-};
-  
   return (
     <Box
       sx={{
@@ -53,9 +52,10 @@ const getPriorityColor = (priority: Task['priority']) => {
         justifyContent: "space-between",
         alignItems: "flex-start",
         width: "100%",
-        backgroundColor: getStatusColor(task.status),
+        backgroundColor: theme.palette.background.paper,
         padding: "20px",
-        border: "2px solid white",
+        border: `2px solid ${theme.palette.background.default}`,
+        borderLeft: `6px solid ${getStatusColor(task.status)}`,
         borderRadius: "5px",
       }}
     >
@@ -64,13 +64,24 @@ const getPriorityColor = (priority: Task['priority']) => {
         <Typography variant="body2" color="text.secondary">
           {task.description}
         </Typography>
-        <Box display="flex" gap={2} mt={1}>
+        <Box display="flex" gap={2} mt={1} alignItems="center">
           <Typography sx={{ color: getPriorityColor(task.priority) }}>
             Priority: <strong>{task.priority}</strong>
           </Typography>
           <Typography variant="caption" color="text.secondary">
             Due: {new Date(task.dueDate).toLocaleDateString()}
           </Typography>
+          <Chip
+            label={task.status.replace("-", " ")}
+            color={
+              task.status === "pending"
+                ? "warning"
+                : task.status === "in-progress"
+                  ? "info"
+                  : "success"
+            }
+            size="small"
+          />
         </Box>
       </Box>
 
@@ -97,15 +108,20 @@ const getPriorityColor = (priority: Task['priority']) => {
             <MenuItem value="completed">Completed</MenuItem>
           </Select>
         </FormControl>
-        <Button
-          variant="outlined"
-          color="error"
-          size="small"
+
+        <DeleteIcon
+          sx={{
+            color: "error.main",
+            fontSize: 28,
+            cursor: "pointer",
+            "&:hover": {
+              color: "error.dark",
+              transform: "scale(1.2)",
+            },
+            transition: "transform 0.2s ease-in-out",
+          }}
           onClick={() => onDelete(task.id)}
-          startIcon={<DeleteIcon  />}
-        >
-          Delete
-        </Button>
+        />
       </Box>
     </Box>
   );
