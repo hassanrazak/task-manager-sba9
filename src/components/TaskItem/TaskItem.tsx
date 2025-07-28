@@ -48,15 +48,16 @@ const TaskItem: React.FC<TaskItemProps> = ({
         }}
       >
         <FormControl size="small" fullWidth sx={{ maxWidth: 200 }}>
-          <InputLabel>Status</InputLabel>
+          <InputLabel>Set Status</InputLabel>
           <Select
             value={task.status}
+            label="Set Status"
             onChange={(e) =>
               onStatusChange(task.id, e.target.value as TaskStatus)
             }
           >
             <MenuItem value="pending">Pending</MenuItem>
-            <MenuItem value="in-progress">In Progress</MenuItem>
+            <MenuItem value="in-progress">In-Progress</MenuItem>
             <MenuItem value="completed">Completed</MenuItem>
           </Select>
         </FormControl>

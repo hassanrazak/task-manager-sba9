@@ -2,6 +2,7 @@ import { Container, Box, Typography } from "@mui/material";
 import TaskList from "../components/TaskList/TaskList";
 import { useEffect, useState } from "react";
 import type { Task } from "../types";
+import TaskFilter from "../components/TaskFilter/TaskFilter";
 
 const TaskManager = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
@@ -28,7 +29,9 @@ const TaskManager = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Task Manager
         </Typography>
-        <Box mb={2}>{/* <TaskFilter /> */}</Box>
+        <Box mb={2}>
+          <TaskFilter onFilterChange={() => {}} />
+        </Box>
         <Box>
           <TaskList
             tasks={taskList}
