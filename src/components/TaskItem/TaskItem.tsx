@@ -15,6 +15,20 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onStatusChange,
   onDelete,
 }) => {
+
+    const statusColorMap = {
+    pending: "warning.light",
+    "in-progress": "info.light",
+    completed: "success.light",
+  };
+
+  const priorityColorMap = {
+    low: "grey.600",
+    medium: "text.primary",
+    high: "error.main",
+  };
+
+  
   return (
     <Box
       sx={{
@@ -22,7 +36,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         justifyContent: "space-between",
         alignItems: "flex-start",
         width: "100%",
-        backgroundColor: "white",
+        backgroundColor: statusColorMap[task.status],
         padding: "20px",
         border: "2px solid white",
         borderRadius: "5px",
@@ -34,7 +48,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           {task.description}
         </Typography>
         <Box display="flex" gap={2} mt={1}>
-          <Typography>
+          <Typography sx={{ color: priorityColorMap[task.priority] }}>
             Priority: <strong>{task.priority}</strong>
           </Typography>
           <Typography variant="caption" color="text.secondary">
