@@ -1,9 +1,11 @@
-import { Container, Box, Typography } from "@mui/material";
+import { Container, Box, Typography, Button } from "@mui/material";
 import TaskList from "../components/TaskList/TaskList";
 import { useEffect, useState } from "react";
 import type { Task, TaskStatus } from "../types";
 import TaskFilter from "../components/TaskFilter/TaskFilter";
 import { useTheme } from "@mui/material/styles";
+import AddIcon from "@mui/icons-material/Add";
+import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
 
 const Dashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
@@ -12,15 +14,33 @@ const Dashboard: React.FC = () => {
     priority?: "low" | "medium" | "high";
   }>({});
 
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
   const theme = useTheme();
 
-  useEffect(() => {
-    setTimeout(() => {
-      fetch("/tasks.json")
-        .then((res) => res.json())
-        .then((data: Task[]) => setTaskList(data));
-    }, 1000);
-  }, []);
+
+useEffect(() => {
+  const saved = localStorage.getItem('taskList');
+  if (saved) {
+    setTaskList(JSON.parse(saved));
+    setIsInitialized(true);
+  } else {
+    fetch('/tasks.json')
+      .then(res => res.json())
+      .then((data: Task[]) => {
+        setTaskList(data);
+        localStorage.setItem('taskList', JSON.stringify(data));
+        setIsInitialized(true);
+      });
+  }
+}, []);
+
+useEffect(() => {
+  if (isInitialized) {
+    localStorage.setItem('taskList', JSON.stringify(taskList));
+  }
+}, [taskList, isInitialized]);
 
   const handleFilterChange = (newFilters: {
     status?: TaskStatus;
@@ -48,6 +68,9 @@ const Dashboard: React.FC = () => {
     setTaskList((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
+  const handleAddTask = (task: Task) => {
+    setTaskList((prev) => [task, ...prev]); // Add new task at the top
+  };
   return (
     <Container
       maxWidth="lg"
@@ -61,6 +84,27 @@ const Dashboard: React.FC = () => {
         margin: "30px auto",
       }}
     >
+      <Box display="flex" justifyContent="flex-start" mb={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          sx={{
+            borderRadius: 2,
+            fontWeight: 600,
+            textTransform: "none",
+            boxShadow: 2,
+            px: 3,
+            py: 1,
+            "&:hover": {
+              boxShadow: 4,
+            },
+          }}
+          onClick={() => setAddModalOpen(true)}
+        >
+          Add Task
+        </Button>
+      </Box>
       <Box py={4}>
         <Typography variant="h4" align="center" gutterBottom>
           Task Manager
@@ -76,6 +120,13 @@ const Dashboard: React.FC = () => {
           />
         </Box>
       </Box>
+
+      <AddTaskModal
+        open={isAddModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        onAdd={handleAddTask}
+        nextId={String(taskList.length + 1)}
+      />
     </Container>
   );
 };

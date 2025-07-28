@@ -1,4 +1,4 @@
-import type { TaskListProps } from "../../types";
+import type { Task, TaskListProps } from "../../types";
 import List from "@mui/material/List";
 import { Divider, ListItem } from "@mui/material";
 import TaskItem from "./TaskItem";
