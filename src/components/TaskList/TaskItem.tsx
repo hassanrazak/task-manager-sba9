@@ -7,8 +7,9 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import type { TaskItemProps, TaskStatus } from "../../types";
+import type { Task, TaskItemProps, TaskStatus } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from '@mui/material/styles';
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
@@ -16,18 +17,34 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onDelete,
 }) => {
 
-    const statusColorMap = {
-    pending: "warning.light",
-    "in-progress": "info.light",
-    completed: "success.light",
-  };
+  const theme = useTheme();
 
-  const priorityColorMap = {
-    low: "grey.600",
-    medium: "text.primary",
-    high: "error.main",
-  };
 
+ const getStatusColor = (status: TaskStatus) => {
+  switch (status) {
+    case 'pending':
+      return theme.palette.warning.main;
+    case 'in-progress':
+      return theme.palette.info.main;
+    case 'completed':
+      return theme.palette.success.main;
+    default:
+      return theme.palette.grey[300];
+  }
+};
+
+const getPriorityColor = (priority: Task['priority']) => {
+  switch (priority) {
+    case 'low':
+      return theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400];
+    case 'medium':
+      return theme.palette.text.primary;
+    case 'high':
+      return theme.palette.error.main;
+    default:
+      return theme.palette.text.secondary;
+  }
+};
   
   return (
     <Box
@@ -36,7 +53,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         justifyContent: "space-between",
         alignItems: "flex-start",
         width: "100%",
-        backgroundColor: statusColorMap[task.status],
+        backgroundColor: getStatusColor(task.status),
         padding: "20px",
         border: "2px solid white",
         borderRadius: "5px",
@@ -48,7 +65,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           {task.description}
         </Typography>
         <Box display="flex" gap={2} mt={1}>
-          <Typography sx={{ color: priorityColorMap[task.priority] }}>
+          <Typography sx={{ color: getPriorityColor(task.priority) }}>
             Priority: <strong>{task.priority}</strong>
           </Typography>
           <Typography variant="caption" color="text.secondary">

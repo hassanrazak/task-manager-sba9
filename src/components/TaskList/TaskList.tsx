@@ -1,7 +1,7 @@
 import type { TaskListProps } from "../../types";
 import List from "@mui/material/List";
 import { Divider, ListItem } from "@mui/material";
-import TaskItem from "../TaskItem/TaskItem";
+import TaskItem from "./TaskItem";
 import React from "react";
 
 const TaskList: React.FC<TaskListProps> = ({
