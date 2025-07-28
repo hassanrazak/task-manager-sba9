@@ -14,5 +14,69 @@
     "status": "pending",
     "priority": "medium",
     "dueDate": "2025-08-03"
+  },
+  {
+    "id": "3",
+    "title": "Write documentation",
+    "description": "Add usage instructions and README",
+    "status": "completed",
+    "priority": "low",
+    "dueDate": "2025-07-28"
+  },
+  {
+    "id": "4",
+    "title": "Refactor code",
+    "description": "Clean up TaskItem and TaskList components",
+    "status": "in-progress",
+    "priority": "medium",
+    "dueDate": "2025-08-02"
+  },
+  {
+    "id": "5",
+    "title": "Plan sprint",
+    "description": "Organize tasks for next sprint planning session",
+    "status": "pending",
+    "priority": "high",
+    "dueDate": "2025-08-05"
+  },
+  {
+    "id": "6",
+    "title": "Team meeting",
+    "description": "Discuss progress and blockers",
+    "status": "completed",
+    "priority": "low",
+    "dueDate": "2025-07-30"
+  },
+  {
+    "id": "7",
+    "title": "Test features",
+    "description": "Write and run unit tests",
+    "status": "in-progress",
+    "priority": "high",
+    "dueDate": "2025-08-04"
+  },
+  {
+    "id": "8",
+    "title": "Design wireframes",
+    "description": "Sketch UI mockups for new features",
+    "status": "pending",
+    "priority": "medium",
+    "dueDate": "2025-08-06"
+  },
+  {
+    "id": "9",
+    "title": "Deploy to staging",
+    "description": "Push latest build to staging server",
+    "status": "pending",
+    "priority": "high",
+    "dueDate": "2025-08-02"
+  },
+  {
+    "id": "10",
+    "title": "Update dependencies",
+    "description": "Bump MUI and React versions",
+    "status": "completed",
+    "priority": "low",
+    "dueDate": "2025-07-29"
   }
 ]

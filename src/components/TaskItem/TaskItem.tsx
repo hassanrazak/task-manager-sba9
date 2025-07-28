@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import type { TaskItemProps, TaskStatus } from "../../types";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
@@ -21,6 +22,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
         justifyContent: "space-between",
         alignItems: "flex-start",
         width: "100%",
+        backgroundColor: "white",
+        padding: "20px",
+        border: "2px solid white",
+        borderRadius: "5px",
       }}
     >
       <Box sx={{ width: "50%" }}>
@@ -61,12 +66,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
             <MenuItem value="completed">Completed</MenuItem>
           </Select>
         </FormControl>
-
         <Button
           variant="outlined"
           color="error"
           size="small"
           onClick={() => onDelete(task.id)}
+          startIcon={<DeleteIcon  />}
         >
           Delete
         </Button>
