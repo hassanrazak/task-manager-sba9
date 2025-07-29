@@ -6,6 +6,8 @@ import TaskFilter from "../components/TaskFilter/TaskFilter";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
+import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
+import { Margin } from "@mui/icons-material";
 
 const Dashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
@@ -19,28 +21,27 @@ const Dashboard: React.FC = () => {
 
   const theme = useTheme();
 
+  useEffect(() => {
+    const saved = localStorage.getItem("taskList");
+    if (saved) {
+      setTaskList(JSON.parse(saved));
+      setIsInitialized(true);
+    } else {
+      fetch("/tasks.json")
+        .then((res) => res.json())
+        .then((data: Task[]) => {
+          setTaskList(data);
+          localStorage.setItem("taskList", JSON.stringify(data));
+          setIsInitialized(true);
+        });
+    }
+  }, []);
 
-useEffect(() => {
-  const saved = localStorage.getItem('taskList');
-  if (saved) {
-    setTaskList(JSON.parse(saved));
-    setIsInitialized(true);
-  } else {
-    fetch('/tasks.json')
-      .then(res => res.json())
-      .then((data: Task[]) => {
-        setTaskList(data);
-        localStorage.setItem('taskList', JSON.stringify(data));
-        setIsInitialized(true);
-      });
-  }
-}, []);
-
-useEffect(() => {
-  if (isInitialized) {
-    localStorage.setItem('taskList', JSON.stringify(taskList));
-  }
-}, [taskList, isInitialized]);
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem("taskList", JSON.stringify(taskList));
+    }
+  }, [taskList, isInitialized]);
 
   const handleFilterChange = (newFilters: {
     status?: TaskStatus;
@@ -84,32 +85,46 @@ useEffect(() => {
         margin: "30px auto",
       }}
     >
-      <Box display="flex" justifyContent="flex-start" mb={2}>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap={2}
+        mb={2}
+        width="100%" 
+      >
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           sx={{
+            whiteSpace: "nowrap",
+            px: 3,
+            py: 1,
             borderRadius: 2,
             fontWeight: 600,
             textTransform: "none",
             boxShadow: 2,
-            px: 3,
-            py: 1,
-            "&:hover": {
-              boxShadow: 4,
-            },
+            "&:hover": { boxShadow: 4 },
           }}
           onClick={() => setAddModalOpen(true)}
         >
           Add Task
         </Button>
+
+        <TaskSearchBar />
       </Box>
       <Box py={4}>
         <Typography variant="h4" align="center" gutterBottom>
           Task Manager
         </Typography>
-        <Box mb={2}>
+        <Box
+          mb={2}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          gap={2}
+          flexWrap="wrap"
+        >
           <TaskFilter onFilterChange={handleFilterChange} />
         </Box>
         <Box>

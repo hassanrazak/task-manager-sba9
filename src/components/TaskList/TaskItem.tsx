@@ -110,8 +110,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
         <DeleteIcon
           sx={{
-            color: "error.main",
-            fontSize: 28,
+            marginTop:'50px',
+            color:'error.main',
+            fontSize: 18,
             cursor: "pointer",
             "&:hover": {
               color: "error.dark",

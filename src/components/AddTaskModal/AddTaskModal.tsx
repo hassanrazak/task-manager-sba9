@@ -27,7 +27,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
     description: '',
     status: 'pending',
     priority: 'medium',
-    dueDate: '',
+    dueDate: new Date().toISOString().split('T')[0],
   });
 
   const handleSubmit = () => {
