@@ -5,11 +5,15 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TableCell,
+  TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import type { Task, TaskItemProps, TaskStatus } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "@mui/material/styles";
+import EditIcon from "@mui/icons-material/Edit";
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
@@ -43,87 +47,97 @@ const TaskItem: React.FC<TaskItemProps> = ({
         return theme.palette.text.secondary;
     }
   };
-
+  {
+  }
   return (
-    <Box
+    <TableRow
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        width: "100%",
-        backgroundColor: theme.palette.background.paper,
-        padding: "20px",
-        border: `2px solid ${theme.palette.background.default}`,
-        borderLeft: `6px solid ${getStatusColor(task.status)}`,
-        borderRadius: "5px",
+        borderLeft: `3px solid ${getStatusColor(task.status)}`,
+        backgroundColor: "background.paper", 
+        "&:not(:last-child)": {
+          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+        },
+        "&:hover": {
+          backgroundColor: (theme) => theme.palette.action.hover, 
+        },
       }}
     >
-      <Box sx={{ width: "50%" }}>
-        <Typography variant="h6">{task.title}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          {task.description}
-        </Typography>
-        <Box display="flex" gap={2} mt={1} alignItems="center">
-          <Typography sx={{ color: getPriorityColor(task.priority) }}>
-            Priority: <strong>{task.priority}</strong>
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Due: {new Date(task.dueDate).toLocaleDateString()}
-          </Typography>
-          <Chip
-            label={task.status.replace("-", " ")}
-            color={
-              task.status === "pending"
-                ? "warning"
-                : task.status === "in-progress"
-                  ? "info"
-                  : "success"
-            }
-            size="small"
-          />
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          width: "50%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          gap: 1,
-        }}
-      >
-        <FormControl size="small" fullWidth sx={{ maxWidth: 200 }}>
-          <InputLabel>Set Status</InputLabel>
-          <Select
-            value={task.status}
-            label="Set Status"
-            onChange={(e) =>
-              onStatusChange(task.id, e.target.value as TaskStatus)
-            }
-          >
-            <MenuItem value="pending">Pending</MenuItem>
-            <MenuItem value="in-progress">In-Progress</MenuItem>
-            <MenuItem value="completed">Completed</MenuItem>
-          </Select>
-        </FormControl>
-
-        <DeleteIcon
+      <TableCell>{task.title}</TableCell>
+      <TableCell>{task.description}</TableCell>
+      <TableCell sx={{ color: getPriorityColor(task.priority) }}>
+        {task.priority}
+      </TableCell>
+      <TableCell>{new Date(task.dueDate).toLocaleDateString()}</TableCell>
+      <TableCell>
+        <Box sx={{ display: "flex", flexDirection: "column" }} gap={3}>
+          <FormControl size="small" sx={{ minWidth: 120 }}>
+            <InputLabel>Set Status</InputLabel>
+            <Select
+              value={task.status}
+              label="Set Status"
+              onChange={(e) =>
+                onStatusChange(task.id, e.target.value as TaskStatus)
+              }
+            >
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="in-progress">In-Progress</MenuItem>
+              <MenuItem value="completed">Completed</MenuItem>
+            </Select>
+          </FormControl>
+          {/* <Chip
+          label={task.status.replace("-", " ")}
+          color={
+            task.status === "pending"
+              ? "warning"
+              : task.status === "in-progress"
+                ? "info"
+                : "success"
+          }
+          size="small"
           sx={{
-            marginTop:'50px',
-            color:'error.main',
-            fontSize: 18,
-            cursor: "pointer",
-            "&:hover": {
-              color: "error.dark",
-              transform: "scale(1.2)",
-            },
-            transition: "transform 0.2s ease-in-out",
-          }}
-          onClick={() => onDelete(task.id)}
-        />
-      </Box>
-    </Box>
+    width: "40px",           
+    justifyContent: 'center',
+  }}
+         
+        />  */}
+        </Box>
+      </TableCell>
+
+      <TableCell align="right">
+        <Box display="flex" justifyContent="center" gap={5}>
+          <Tooltip title="Edit" arrow>
+            <EditIcon
+              sx={{
+                color: "primary.main",
+                fontSize: 20,
+                cursor: "pointer",
+                "&:hover": {
+                  color: "primary.dark",
+                  transform: "scale(1.2)",
+                },
+                transition: "transform 0.2s ease-in-out",
+              }}
+              onClick={() => {}}
+            />
+          </Tooltip>
+          <Tooltip title="Delete" placement="top" arrow>
+            <DeleteIcon
+              sx={{
+                color: "error.main",
+                fontSize: 20,
+                cursor: "pointer",
+                "&:hover": {
+                  color: "error.dark",
+                  transform: "scale(1.2)",
+                },
+                transition: "transform 0.2s ease-in-out",
+              }}
+              onClick={() => task && onDelete(task)}
+            />
+          </Tooltip>
+        </Box>
+      </TableCell>
+    </TableRow>
   );
 };
 

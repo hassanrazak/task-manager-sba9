@@ -7,18 +7,21 @@ import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
 import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
-
+import ConfirmDeleteModal from "../components/AddTaskModal/ConfirmDeleteModal";
 
 const Dashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
     priority?: "low" | "medium" | "high";
-    searchTerm?:string
+    searchTerm?: string;
   }>({});
+
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
   const theme = useTheme();
 
@@ -55,10 +58,10 @@ const Dashboard: React.FC = () => {
     const statusMatch = !filters.status || task.status === filters.status;
     const priorityMatch =
       !filters.priority || task.priority === filters.priority;
-       const searchMatch =
-    !filters.searchTerm ||
-    task.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-    task.description.toLowerCase().includes(filters.searchTerm.toLowerCase());
+    const searchMatch =
+      !filters.searchTerm ||
+      task.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(filters.searchTerm.toLowerCase());
     return statusMatch && priorityMatch && searchMatch;
   });
 
@@ -70,21 +73,27 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  const handleRequestDelete = (task: Task) => {
+    setTaskToDelete(task);
+    setDeleteModalOpen(true);
+  };
+
   const handleDelete = (taskId: string) => {
+     setDeleteModalOpen(false);
     setTaskList((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   const handleAddTask = (task: Task) => {
-    setTaskList((prev) => [task, ...prev]); // Add new task at the top
+    setTaskList((prev) => [task, ...prev]); 
   };
 
-  const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFilters((prevFilters) => ({
-      ...prevFilters, 
-      [name]:value
-    }))
-  }
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
   return (
     <Container
       maxWidth="lg"
@@ -98,13 +107,7 @@ const Dashboard: React.FC = () => {
         margin: "30px auto",
       }}
     >
-      <Box
-        display="flex"
-        alignItems="center"
-        gap={2}
-        mb={2}
-        width="100%" 
-      >
+      <Box display="flex" alignItems="center" gap={2} mb={2} width="100%">
         <Button
           variant="contained"
           color="primary"
@@ -124,7 +127,7 @@ const Dashboard: React.FC = () => {
           Add Task
         </Button>
 
-        <TaskSearchBar onSearch={handleSearch}/>
+        <TaskSearchBar onSearch={handleSearch} />
       </Box>
       <Box py={4}>
         <Typography variant="h4" align="center" gutterBottom>
@@ -144,7 +147,7 @@ const Dashboard: React.FC = () => {
           <TaskList
             tasks={filteredTasks}
             onStatusChange={handleStatusChange}
-            onDelete={handleDelete}
+            onDelete={handleRequestDelete}
           />
         </Box>
       </Box>
@@ -154,6 +157,13 @@ const Dashboard: React.FC = () => {
         onClose={() => setAddModalOpen(false)}
         onAdd={handleAddTask}
         nextId={String(taskList.length + 1)}
+      />
+
+      <ConfirmDeleteModal
+        task={taskToDelete}
+        open={isDeleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={handleDelete}
       />
     </Container>
   );
