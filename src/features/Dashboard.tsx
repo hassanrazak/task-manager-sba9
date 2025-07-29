@@ -7,13 +7,14 @@ import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
 import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
-import { Margin } from "@mui/icons-material";
+
 
 const Dashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
     priority?: "low" | "medium" | "high";
+    searchTerm?:string
   }>({});
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -54,7 +55,11 @@ const Dashboard: React.FC = () => {
     const statusMatch = !filters.status || task.status === filters.status;
     const priorityMatch =
       !filters.priority || task.priority === filters.priority;
-    return statusMatch && priorityMatch;
+       const searchMatch =
+    !filters.searchTerm ||
+    task.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+    task.description.toLowerCase().includes(filters.searchTerm.toLowerCase());
+    return statusMatch && priorityMatch && searchMatch;
   });
 
   const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
@@ -72,6 +77,14 @@ const Dashboard: React.FC = () => {
   const handleAddTask = (task: Task) => {
     setTaskList((prev) => [task, ...prev]); // Add new task at the top
   };
+
+  const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters, 
+      [name]:value
+    }))
+  }
   return (
     <Container
       maxWidth="lg"
@@ -111,7 +124,7 @@ const Dashboard: React.FC = () => {
           Add Task
         </Button>
 
-        <TaskSearchBar />
+        <TaskSearchBar onSearch={handleSearch}/>
       </Box>
       <Box py={4}>
         <Typography variant="h4" align="center" gutterBottom>

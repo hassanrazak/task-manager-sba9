@@ -1,11 +1,16 @@
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-const TaskSearchBar = () => {
+interface TaskSearchBarProps{
+    onSearch:(e:React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const TaskSearchBar:React.FC<TaskSearchBarProps> = ({onSearch}) => {
   return (
     <TextField
       fullWidth
       sx={{ flexGrow: 1 }}
+      name='searchTerm'
       type="search"
       label="Search Tasks"
       variant="outlined"
@@ -17,6 +22,7 @@ const TaskSearchBar = () => {
           </InputAdornment>
         ),
       }}
+      onChange={onSearch}
     />
   );
 };
