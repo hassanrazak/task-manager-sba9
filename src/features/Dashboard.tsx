@@ -99,8 +99,8 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
   };
 
   const handleDelete = (taskId: string) => {
-    setDeleteModalOpen(false);
     setTaskList((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    setDeleteModalOpen(false);
   };
 
   const handleAddTask = (task: Task) => {
@@ -127,6 +127,10 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
     setAddModalOpen(false);
     setTaskToEdit(null);
   };
+
+  const handleCloseModal = () => {
+  setAddModalOpen(false);
+};
 
   return (
     <Container
@@ -195,7 +199,7 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
 
       <AddTaskModal
         open={isAddModalOpen}
-        onClose={() => setAddModalOpen(false)}
+        onClose={handleCloseModal}
         onAdd={handleAddTask}
         nextId={String(taskList.length + 1)}
         taskToEdit={taskToEdit}

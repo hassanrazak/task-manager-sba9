@@ -9,62 +9,95 @@ import {
   Select,
   MenuItem,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useEffect, useState } from 'react';
-import type { AddTaskModalProps, Task, TaskStatus } from '../../types';
+import { useEffect, useState } from "react";
+import type { AddTaskModalProps, Task, TaskStatus } from "../../types";
 
-
-const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextId, taskToEdit, onUpdate }) => {
+const AddTaskModal: React.FC<AddTaskModalProps> = ({
+  open,
+  onClose,
+  onAdd,
+  nextId,
+  taskToEdit,
+  onUpdate,
+}) => {
   const [newTask, setNewTask] = useState({
-    title: '',
-    description: '',
-    status: 'pending',
-    priority: 'medium',
-    dueDate: new Date().toISOString().split('T')[0],
+    title: "",
+    description: "",
+    status: "pending",
+    priority: "medium",
+    dueDate: new Date().toISOString().split("T")[0],
   });
 
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+
+  const resetForm = () => {
+    if (taskToEdit) {
+      setNewTask(taskToEdit);
+    } else {
+      setNewTask({
+        title: "",
+        description: "",
+        status: "pending",
+        priority: "medium",
+        dueDate: new Date().toISOString().split("T")[0],
+      });
+    }
+    setTitleError("");
+    setDescriptionError("");
+  };
+
   useEffect(() => {
-  if (taskToEdit) {
-    setNewTask(taskToEdit);
-  } else {
-    setNewTask({
-      title: '',
-      description: '',
-      status: 'pending',
-      priority: 'medium',
-      dueDate: new Date().toISOString().split('T')[0],
-    });
-  }
-}, [taskToEdit]);
+    if (open) resetForm();
+  }, [open, taskToEdit]);
 
   const handleSubmit = () => {
-    if(taskToEdit && onUpdate){
-      onUpdate(newTask as Task)
-    }else{
-     onAdd({ id: nextId, ...newTask } as Task);
+    const titleIsValid = newTask.title.trim() !== "";
+    const descriptionIsValid = newTask.description.trim() !== "";
+
+    if (!titleIsValid || !descriptionIsValid) {
+      if (!titleIsValid) setTitleError("Title is required!");
+      if (!descriptionIsValid) setDescriptionError("Due date is required!");
+      return;
+    }
+    if (taskToEdit && onUpdate) {
+      onUpdate(newTask as Task);
+    } else {
+      onAdd({ id: nextId, ...newTask } as Task);
     }
     setNewTask({
-      title: '',
-      description: '',
-      status: 'pending',
-      priority: 'medium',
-      dueDate: '',
+      title: "",
+      description: "",
+      status: "pending",
+      priority: "medium",
+      dueDate: "",
     });
+    setTitleError("");
+    setDescriptionError("");
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>{taskToEdit && onUpdate ? "Update Task":'Add New Task'}</DialogTitle>
+      <DialogTitle>
+        {taskToEdit && onUpdate ? "Update Task" : "Add New Task"}
+      </DialogTitle>
       <DialogContent
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
       >
         <TextField
           label="Title"
           fullWidth
           value={newTask.title}
-          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value;
+            setNewTask({ ...newTask, title: value });
+            setTitleError(value.trim() ? "" : "Title is required!");
+          }}
+          error={!!titleError}
+          helperText={titleError}
         />
         <TextField
           label="Description"
@@ -72,7 +105,13 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
           rows={3}
           fullWidth
           value={newTask.description}
-          onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value;
+            setNewTask({ ...newTask, description: value });
+            setDescriptionError(value.trim() ? "" : "Description is required");
+          }}
+          error={!!descriptionError}
+          helperText={descriptionError}
         />
         <TextField
           label="Due Date"
@@ -101,7 +140,10 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
             label="Priority"
             value={newTask.priority}
             onChange={(e) =>
-              setNewTask({ ...newTask, priority: e.target.value as "low" | "medium" | "high"})
+              setNewTask({
+                ...newTask,
+                priority: e.target.value as "low" | "medium" | "high",
+              })
             }
           >
             <MenuItem value="low">Low</MenuItem>
@@ -115,9 +157,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
         <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={!newTask.title || !newTask.dueDate}
         >
-          {taskToEdit && onUpdate ? "Update Task":'Add Task'}
+          {taskToEdit && onUpdate ? "Update Task" : "Add Task"}
         </Button>
       </DialogActions>
     </Dialog>
