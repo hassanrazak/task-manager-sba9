@@ -8,7 +8,6 @@ import {
   TableCell,
   TableRow,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import type { Task, TaskItemProps, TaskStatus } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";

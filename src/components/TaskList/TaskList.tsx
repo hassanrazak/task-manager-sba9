@@ -1,13 +1,11 @@
-import type { Task, TaskListProps } from "../../types";
-import List from "@mui/material/List";
+import type { TaskListProps } from "../../types";
 import {
-  Divider,
-  ListItem,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
 import TaskItem from "./TaskItem";
 import React from "react";
@@ -16,7 +14,10 @@ const TaskList: React.FC<TaskListProps> = ({
   tasks,
   onStatusChange,
   onDelete,
-  handleEditTask
+  handleEditTask,
+  sortBy,
+  sortOrder,
+  handleSort,
 }) => {
   return (
     <Table>
@@ -33,11 +34,53 @@ const TaskList: React.FC<TaskListProps> = ({
         }}
       >
         <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Description</TableCell>
-          <TableCell>Priority</TableCell>
-          <TableCell>Due Date</TableCell>
-          <TableCell>Set Status</TableCell>
+          <TableCell>
+            <TableSortLabel
+              active={sortBy === "title"}
+              direction={sortBy === "title" ? sortOrder : "asc"}
+              onClick={() => handleSort("title")}
+              hideSortIcon={false}
+              >
+              Title
+            </TableSortLabel>
+          </TableCell>
+          <TableCell>
+            <TableSortLabel
+              active={sortBy === "description"}
+              direction={sortBy === "description" ? sortOrder : "asc"}
+              onClick={() => handleSort("description")}
+              hideSortIcon={false}
+            >
+              Description
+            </TableSortLabel>
+          </TableCell>
+          <TableCell sortDirection={sortBy === "priority" ? sortOrder : false}>
+            <TableSortLabel
+              active={sortBy === "priority"}
+              direction={sortBy === "priority" ? sortOrder : "asc"}
+              onClick={() => handleSort("priority")}
+            >
+              Priority
+            </TableSortLabel>
+          </TableCell>
+          <TableCell sortDirection={sortBy === "dueDate" ? sortOrder : false}>
+            <TableSortLabel
+              active={sortBy === "dueDate"}
+              direction={sortBy === "dueDate" ? sortOrder : "asc"}
+              onClick={() => handleSort("dueDate")}
+            >
+              Due Date
+            </TableSortLabel>
+          </TableCell>
+          <TableCell sortDirection={sortBy === "status" ? sortOrder : false}>
+            <TableSortLabel
+              active={sortBy === "status"}
+              direction={sortBy === "status" ? sortOrder : "asc"}
+              onClick={() => handleSort("status")}
+            >
+              Status
+            </TableSortLabel>
+          </TableCell>
           <TableCell>Actions</TableCell>
         </TableRow>
       </TableHead>
@@ -51,8 +94,8 @@ const TaskList: React.FC<TaskListProps> = ({
       >
         {tasks.map((task) => (
           <TaskItem
-            key={task.id}
             task={task}
+            key={task.id}
             onStatusChange={onStatusChange}
             onDelete={() => task && onDelete(task)}
             handleEditTask={handleEditTask}

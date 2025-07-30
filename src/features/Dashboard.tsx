@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
 import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
 import ConfirmDeleteModal from "../components/AddTaskModal/ConfirmDeleteModal";
+import { sortTasks } from "../utils/taskUtils";
 
 const Dashboard: React.FC = () => {
   const theme = useTheme();
@@ -24,6 +25,23 @@ const Dashboard: React.FC = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+
+  const [sortBy, setSortBy] = useState<
+    "priority" | "dueDate" | "status" | "title" | "description"| ""
+  >("");
+
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (
+    field: "priority" | "dueDate" | "status" | "title" | "description"
+  ) => {
+    if (sortBy === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("taskList");
@@ -64,6 +82,8 @@ const Dashboard: React.FC = () => {
       task.description.toLowerCase().includes(filters.searchTerm.toLowerCase());
     return statusMatch && priorityMatch && searchMatch;
   });
+
+const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
 
   const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
     setTaskList((prevTasks) =>
@@ -162,10 +182,13 @@ const Dashboard: React.FC = () => {
         </Box>
         <Box>
           <TaskList
-            tasks={filteredTasks}
+            tasks={sortedTasks}
             onStatusChange={handleStatusChange}
             onDelete={handleRequestDelete}
             handleEditTask={handleEditTask}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            handleSort={handleSort}
           />
         </Box>
       </Box>

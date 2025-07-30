@@ -7,14 +7,8 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import type { Task } from "../../types";
+import type { ConfirmDeleteModalProps } from "../../types";
 
-interface ConfirmDeleteModalProps {
-  task: Task | null;
-  open: boolean;
-  onClose: () => void;
-  onConfirm: (taskId:string) => void;
-}
 
 const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   open,

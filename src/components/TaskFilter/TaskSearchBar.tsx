@@ -1,9 +1,8 @@
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import type { TaskSearchBarProps } from "../../types";
 
-interface TaskSearchBarProps {
-  onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+
 
 const TaskSearchBar: React.FC<TaskSearchBarProps> = ({ onSearch }) => {
   return (

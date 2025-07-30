@@ -12,16 +12,8 @@ import {
 } from '@mui/material';
 
 import { useEffect, useState } from 'react';
-import type { Task, TaskStatus } from '../../types';
+import type { AddTaskModalProps, Task, TaskStatus } from '../../types';
 
-interface AddTaskModalProps {
-  open: boolean;
-  onClose: () => void;
-  onAdd: (task: Task) => void;
-  nextId: string;
-  taskToEdit?: Task | null;
-  onUpdate?: (task: Task) => void;
-}
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextId, taskToEdit, onUpdate }) => {
   const [newTask, setNewTask] = useState({
