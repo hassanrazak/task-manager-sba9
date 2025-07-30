@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Typography,
 } from "@mui/material";
 
 import { useEffect, useState } from "react";
@@ -80,9 +81,34 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>
-        {taskToEdit && onUpdate ? "Update Task" : "Add New Task"}
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+      PaperProps={{
+        sx: {
+          maxWidth: "750px",
+          borderRadius: 3,
+          boxShadow: 24,
+        },
+      }}
+      BackdropProps={{
+        sx: {
+          backdropFilter: "blur(12px)",
+          backgroundColor: "rgba(0, 0, 0, 0.4)",
+        },
+      }}
+    >
+      <DialogTitle sx={{ textAlign: "center" }}>
+        <Typography
+          variant="h6"
+          align="center"
+          fontWeight={600}
+          textTransform={"uppercase"}
+        >
+          {taskToEdit && onUpdate ? "Update Task" : "New Task"}
+        </Typography>
       </DialogTitle>
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
@@ -98,6 +124,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
           }}
           error={!!titleError}
           helperText={titleError}
+          sx={{ marginTop: "5px" }}
         />
         <TextField
           label="Description"
@@ -154,10 +181,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-        >
+        <Button onClick={handleSubmit} variant="contained">
           {taskToEdit && onUpdate ? "Update Task" : "Add Task"}
         </Button>
       </DialogActions>

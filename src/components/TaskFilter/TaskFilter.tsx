@@ -25,9 +25,9 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange }) => {
   return (
  <Box sx={{ display: "flex", gap: 2 }}>
   <FormControl size="small" fullWidth sx={{ minWidth: 200 }}>
-    <InputLabel>Filter Status</InputLabel>
+    <InputLabel>Status</InputLabel>
     <Select
-      value={status ?? "All"}
+      value={status ?? ""}
       label="Filter Status"
       onChange={(e) => handleStatusChange(e.target.value as TaskStatus | "")}
     >
@@ -39,7 +39,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange }) => {
   </FormControl>
 
   <FormControl size="small" fullWidth sx={{ minWidth: 200 }}>
-    <InputLabel>Filter Priority</InputLabel>
+    <InputLabel>Priority</InputLabel>
     <Select
       value={priority ?? ""}
       label="Filter Priority"
