@@ -11,7 +11,7 @@ import {
   Button,
 } from '@mui/material';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Task, TaskStatus } from '../../types';
 
 interface AddTaskModalProps {
@@ -19,9 +19,11 @@ interface AddTaskModalProps {
   onClose: () => void;
   onAdd: (task: Task) => void;
   nextId: string;
+  taskToEdit?: Task | null;
+  onUpdate?: (task: Task) => void;
 }
 
-const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextId }) => {
+const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextId, taskToEdit, onUpdate }) => {
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -30,8 +32,26 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
     dueDate: new Date().toISOString().split('T')[0],
   });
 
+  useEffect(() => {
+  if (taskToEdit) {
+    setNewTask(taskToEdit);
+  } else {
+    setNewTask({
+      title: '',
+      description: '',
+      status: 'pending',
+      priority: 'medium',
+      dueDate: new Date().toISOString().split('T')[0],
+    });
+  }
+}, [taskToEdit]);
+
   const handleSubmit = () => {
-    onAdd({ id: nextId, ...newTask } as Task);
+    if(taskToEdit && onUpdate){
+      onUpdate(newTask as Task)
+    }else{
+     onAdd({ id: nextId, ...newTask } as Task);
+    }
     setNewTask({
       title: '',
       description: '',
@@ -44,7 +64,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>Add New Task</DialogTitle>
+      <DialogTitle>{taskToEdit && onUpdate ? "Update Task":'Add New Task'}</DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}
       >
@@ -105,7 +125,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ open, onClose, onAdd, nextI
           variant="contained"
           disabled={!newTask.title || !newTask.dueDate}
         >
-          Add Task
+          {taskToEdit && onUpdate ? "Update Task":'Add Task'}
         </Button>
       </DialogActions>
     </Dialog>

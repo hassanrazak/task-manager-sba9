@@ -16,6 +16,7 @@ const TaskList: React.FC<TaskListProps> = ({
   tasks,
   onStatusChange,
   onDelete,
+  handleEditTask
 }) => {
   return (
     <Table>
@@ -54,6 +55,7 @@ const TaskList: React.FC<TaskListProps> = ({
             task={task}
             onStatusChange={onStatusChange}
             onDelete={() => task && onDelete(task)}
+            handleEditTask={handleEditTask}
           />
         ))}
       </TableBody>

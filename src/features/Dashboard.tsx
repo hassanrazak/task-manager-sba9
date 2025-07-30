@@ -10,6 +10,8 @@ import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
 import ConfirmDeleteModal from "../components/AddTaskModal/ConfirmDeleteModal";
 
 const Dashboard: React.FC = () => {
+  const theme = useTheme();
+
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
@@ -17,13 +19,11 @@ const Dashboard: React.FC = () => {
     searchTerm?: string;
   }>({});
 
-
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
-
-  const theme = useTheme();
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("taskList");
@@ -79,12 +79,12 @@ const Dashboard: React.FC = () => {
   };
 
   const handleDelete = (taskId: string) => {
-     setDeleteModalOpen(false);
+    setDeleteModalOpen(false);
     setTaskList((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 
   const handleAddTask = (task: Task) => {
-    setTaskList((prev) => [task, ...prev]); 
+    setTaskList((prev) => [task, ...prev]);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +94,20 @@ const Dashboard: React.FC = () => {
       [name]: value,
     }));
   };
+
+  const handleEditTask = (task: Task) => {
+    setTaskToEdit(task);
+    setAddModalOpen(true);
+  };
+
+  const handleTaskUpdate = (updatedTask: Task) => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setAddModalOpen(false);
+    setTaskToEdit(null);
+  };
+
   return (
     <Container
       maxWidth="lg"
@@ -122,7 +136,10 @@ const Dashboard: React.FC = () => {
             boxShadow: 2,
             "&:hover": { boxShadow: 4 },
           }}
-          onClick={() => setAddModalOpen(true)}
+          onClick={() => {
+            setTaskToEdit(null); // Clear any task being edited
+            setAddModalOpen(true); // Open the modal
+          }}
         >
           Add Task
         </Button>
@@ -148,6 +165,7 @@ const Dashboard: React.FC = () => {
             tasks={filteredTasks}
             onStatusChange={handleStatusChange}
             onDelete={handleRequestDelete}
+            handleEditTask={handleEditTask}
           />
         </Box>
       </Box>
@@ -157,6 +175,8 @@ const Dashboard: React.FC = () => {
         onClose={() => setAddModalOpen(false)}
         onAdd={handleAddTask}
         nextId={String(taskList.length + 1)}
+        taskToEdit={taskToEdit}
+        onUpdate={handleTaskUpdate}
       />
 
       <ConfirmDeleteModal

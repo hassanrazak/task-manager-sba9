@@ -19,6 +19,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onStatusChange,
   onDelete,
+handleEditTask
 }) => {
   const theme = useTheme();
 
@@ -117,7 +118,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 },
                 transition: "transform 0.2s ease-in-out",
               }}
-              onClick={() => {}}
+              onClick={() => handleEditTask(task)}
             />
           </Tooltip>
           <Tooltip title="Delete" placement="top" arrow>
