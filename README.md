@@ -24,55 +24,81 @@ npm run dev
 
 ## Functionality
 
-### 1. Dashbaord Component ([Dashboard.tsx](src/features/Dashboard.tsx))
+### 1. Dashbaord Component ([Dashboard.tsx](src/features/Dashboard.tsx)) ✅
 **Compose all components into a cohesive dashboard**
 
-- Implement responsive layout ✅
-- Handle component communication ✅
-- Implement task addition ✅
-- Data Persistence ✅
-- Add localStorage integration ✅
+- On intial load task array is pulled from local json file located in public folder via useEffect. 
+- loaded tasks are saved to local storage and subsequent CRUD operations are done against local    storage.
+- Use of two useEffects to fix bug where task list updates were causing state of taskList to be set to an empty array. In this way we ensure that if data has been loaded to localstorage to always pull from that. 
+- tasks are saved to state at dashboard level and fed to tasklist compoenent for rendering
+- handlers for `status-update`, `deletion` and `task-update` are passed as callbacks to tasklist -> taskitem.
+- handler for sorting, filtering, editing, etc.. also are centralized at dashboard level and provided as props to child components.
+- Implement responsive layout 
+
   
-### 2. Task List Component([TaskList.tsx](src/components/TaskList/TaskList.tsx))
+### 2. Task List Component([TaskList.tsx](src/components/TaskList/TaskList.tsx)) ✅
 **Implement list rendering with proper key management**
 
-- Creates a table to host all tasks ✅
-- Iterates through the task array ✅
-- generates a table row for each task ✅
-- Add sorting functions to each header column  ✅
+- Creates a table to display all tasks 
+- Add sorting function to each header column i.e `title | description | etc...`  
+- Iterates through the task array 
+- generates a table row  as a `TaskItem` component for each task 
 
-### 3. Task Item Component([TaskItem.tsx](src/components/TaskList/TaskItem.tsx))
+### 3. Task Item Component([TaskItem.tsx](src/components/TaskList/TaskItem.tsx)) ✅
 **Implement list rendering with proper key management**
 
-- Handle task status updates via select dropdown ✅
-- Implement task `DELETION` (trash icon) ✅
-- Implement task `EDIT` (pencil icon) ✅
+- Fires of :
+  - status updates via select dropdown 
+  - task `DELETION` via (trash icon) 
+  - task `EDIT` via (pencil icon) 
 
 
-### Add/Edit Task Modal Component:
+### 4. Add/Edit Task Modal Component ✅
 **Create a controlled form for adding/editing tasks**
 
-- Implement form validation ✅
-- Handle form submission ✅
-- Show validation feedback ✅
-- Handle New task addition ✅
-- Handle update task ✅
+- Implement form validation
+  - isValid
+  - local error states for title and description
+- Handle form submission 
+  - prevent submission unless validation passes
+  - clears errors on successful input 
+- Show validation feedback 
+  - red required text | border highlighted red
+- Handle New task addition 
+  - Clears fields with new task object at local state 
+- Handle update task with prefilled fields 
+  - prepopulates form field, task instance is passed from taskitem component 
+    to dashboard where it is set as a state variable as `taskToEdit` and then passed to 
+    modal to be used to prefill task object  
 
-### Task Filter Component ([TaskFilter.tsx](src/components/TaskFilter/TaskFilter.tsx))
+### 5. Task Filter Component ([TaskFilter.tsx](src/components/TaskFilter/TaskFilter.tsx)) ✅
 **Implement filtering by status and priority**
-- filter tasks by `status | priority`  ✅
-- Implement task filtering logic ✅
 
-### Task Search Component ([TaskSearchBar.tsx](src/components/TaskFilter/TaskSearchBar.tsx))
+- filter tasks by `status | priority` 
+- uses form control
+- callback passed from dahsboard
+- status and priority values are passed to on filter change method to dashboard
+- Dashboard updates filter state 
+- filter state is used to filter taskList 
+- filtered tasks are sent down to tasklist to be rendered
+
+### 6. Task Search Component ([TaskSearchBar.tsx](src/components/TaskFilter/TaskSearchBar.tsx)) ✅
 **Implement filtering by status and priority**
 
-- Add a search bar to search for tasks ✅
-- Keeps local stat  ✅
-- filter tasks by `search term`  ✅
+- Add a search bar to search for tasks 
+- filter tasks by `search term`  
+- search term passes up a string to handleSearch at dashboard
+- handle search updates the searchTerm field of filter state
+- filteredTasks are recalculated based on priority, status, and search term. 
 
+### 7. Delete Task Modal Component ✅
+**Confirm task deletion**
 
- 
-  
+- Cautions user prior to task deletion 
+- Deletes task onClick of DELETE button 
+- Task is deleted from localstorage 
+- Dashboard re-renders updated task list 
+
 
 ## References
 

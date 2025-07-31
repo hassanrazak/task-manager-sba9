@@ -18,7 +18,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onStatusChange,
   onDelete,
-handleEditTask
+  handleEditTask,
 }) => {
   const theme = useTheme();
 
@@ -53,12 +53,12 @@ handleEditTask
     <TableRow
       sx={{
         borderLeft: `3px solid ${getStatusColor(task.status)}`,
-        backgroundColor: "background.paper", 
+        backgroundColor: "background.paper",
         "&:not(:last-child)": {
           borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
         },
         "&:hover": {
-          backgroundColor: (theme) => theme.palette.action.hover, 
+          backgroundColor: (theme) => theme.palette.action.hover,
         },
       }}
     >
@@ -84,6 +84,9 @@ handleEditTask
               <MenuItem value="completed">Completed</MenuItem>
             </Select>
           </FormControl>
+
+          
+{/* *********************future state addition***************************************** */}
           {/* <Chip
           label={task.status.replace("-", " ")}
           color={
@@ -92,14 +95,17 @@ handleEditTask
               : task.status === "in-progress"
                 ? "info"
                 : "success"
-          }
-          size="small"
-          sx={{
-    width: "40px",           
-    justifyContent: 'center',
-  }}
-         
-        />  */}
+          } 
+        
+                size="small"
+                    sx={{
+                    width: "40px",           
+                    justifyContent: 'center',
+                        }}
+                />  
+        */}
+{/* *********************future state addition***************************************** */}
+
         </Box>
       </TableCell>
 
