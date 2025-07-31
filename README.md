@@ -100,6 +100,19 @@ npm run dev
 - Dashboard re-renders updated task list 
 
 
+## Reflection
+I was able to deeply interact with ==Typescript==, ==React==, and ==MUI== during this project. 
+In order to extend what I had done in lab 9.3 I first wanted to see if I could get MUI's Dashboard
+layout component working. After learning about the context that AppProvider provided as well the 
+various props that it had I was able to have access to the in-built functionality of the dashboard 
+with just a few lines of code. This helped give the application a professional look even though 
+many of the dashboard features havent been implemented. But the theme toggling works like a charm 
+between night and day mode and I am able to navigated between different pages even though they all 
+show the same thing. In the future the plan is have an Overview component that shows metrics 
+and the tasks component will only show the task manager. I made sure in the app to use Typescript through out so that all of my components knew what to expect for the shape of props which was a good
+exercise. I used a top down state management approach, lifting data to the dashboard level and using handlers to create cross component communication. One of the main challenges I had was reusing the add task modal for delete and ensuring that errors were cleared so they didnt presist across sessions. By tracking the open and close state of the modal I was able to set the task for the form 
+as either a new task or one thats to be editing. It was a fun problem to tackle. Overall the project helped me to reinforce a lot of my previous knowledge and helped me upskill into using modal from MUI which was new for me.
+
 ## References
 
 - [Material UI Documentation](https://mui.com/)
