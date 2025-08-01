@@ -9,6 +9,7 @@ import AddTaskModal from "../components/AddTaskModal/AddTaskModal";
 import TaskSearchBar from "../components/TaskFilter/TaskSearchBar";
 import ConfirmDeleteModal from "../components/AddTaskModal/ConfirmDeleteModal";
 import { sortTasks } from "../utils/taskUtils";
+import ActiveFilters from "../components/TaskFilter/ActiveFilters";
 
 const Dashboard: React.FC = () => {
   const theme = useTheme();
@@ -27,7 +28,7 @@ const Dashboard: React.FC = () => {
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
   const [sortBy, setSortBy] = useState<
-    "priority" | "dueDate" | "status" | "title" | "description"| ""
+    "priority" | "dueDate" | "status" | "title" | "description" | ""
   >("");
 
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -83,7 +84,7 @@ const Dashboard: React.FC = () => {
     return statusMatch && priorityMatch && searchMatch;
   });
 
-const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
+  const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
 
   const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
     setTaskList((prevTasks) =>
@@ -129,9 +130,14 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
   };
 
   const handleCloseModal = () => {
-  setAddModalOpen(false);
-};
+    setAddModalOpen(false);
+  };
 
+  const handleResetFiltersAndSorting = () => {
+    setFilters({});
+    setSortBy("");
+    setSortOrder("asc");
+  };
   return (
     <Container
       maxWidth="lg"
@@ -171,9 +177,6 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
         <TaskSearchBar onSearch={handleSearch} />
       </Box>
       <Box py={4}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Task Manager
-        </Typography>
         <Box
           mb={2}
           display="flex"
@@ -182,8 +185,22 @@ const sortedTasks = sortTasks(filteredTasks, sortBy, sortOrder);
           gap={2}
           flexWrap="wrap"
         >
-          <TaskFilter onFilterChange={handleFilterChange} />
+          <TaskFilter filters={filters} onFilterChange={handleFilterChange} />
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleResetFiltersAndSorting}
+          >
+            Reset Filters
+          </Button>
+          <ActiveFilters
+            status={filters.status}
+            priority={filters.priority}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+          />
         </Box>
+
         <Box>
           <TaskList
             tasks={sortedTasks}
