@@ -27,6 +27,10 @@ export interface TaskItemProps {
 }
 
 export interface TaskFilterProps {
+    filters: {
+    status?: TaskStatus;
+    priority?: "low" | "medium" | "high";
+  };
   onFilterChange: (filters: {
     status?: TaskStatus;
     priority?: "low" | "medium" | "high";
@@ -50,4 +54,11 @@ export interface ConfirmDeleteModalProps {
   open: boolean;
   onClose: () => void;
   onConfirm: (taskId:string) => void;
+}
+
+export interface ActiveFiltersProps {
+  status?: TaskStatus;
+  priority?: "low" | "medium" | "high";
+  sortBy: string;
+  sortOrder: "asc" | "desc";
 }
